@@ -25,7 +25,7 @@ typedef struct _ast_node ast_node;
 typedef struct _child_node_ptr child_node_ptr;
 typedef struct _ast ast;
 
-//ÓÃÀ´¶¨Òå½áµãÀàĞÍµÄÃ¶¾ÙÀàĞÍ±äÁ¿
+//ç”¨æ¥å®šä¹‰ç»“ç‚¹ç±»å‹çš„æšä¸¾ç±»å‹å˜é‡
 enum _node_type_type{
 	ASSIGN = 258, STR, CMP, SCAN, PRINT,
 	RETURN, WHILE, IF, ELSE, VOID, INT,
@@ -39,19 +39,19 @@ enum _node_type_type{
 	PRIMARY_EXPR, EXPR_LIST, ID_LIST
 };
 
-//½áµã½á¹¹ÀàĞÍ¶¨Òå
+//ç»“ç‚¹ç»“æ„ç±»å‹å®šä¹‰
 struct _ast_node {
 	node_type_type node_type;
-	child_node_ptr *child_list;//ÓÃ ´øÍ·½áµãµÄ Á´±í´¢´æº¢×Ó½ÚµãµÄÖ¸Õë
+	child_node_ptr *child_list;//ç”¨ å¸¦å¤´ç»“ç‚¹çš„ é“¾è¡¨å‚¨å­˜å­©å­èŠ‚ç‚¹çš„æŒ‡é’ˆ
 };
 
-//º¢×Ó½áµãÁ´±íµÄ½áµã
+//å­©å­ç»“ç‚¹é“¾è¡¨çš„ç»“ç‚¹
 struct _child_node_ptr {
 	ast_node *child_node;
 	child_node_ptr *next;
 };
 
-//³éÏóÓï·¨Ê÷µÄ½á¹¹ÀàĞÍ
+//æŠ½è±¡è¯­æ³•æ ‘çš„ç»“æ„ç±»å‹
 struct _ast {
 	ast_node *root;
 };
@@ -74,7 +74,7 @@ const char* type_form[] = {
 
 
 
-//flexÉú³ÉµÄ×Ô¶¯»úµÄ²¿·Öº¯ÊıÒÔ¼°±äÁ¿
+//flexç”Ÿæˆçš„è‡ªåŠ¨æœºçš„éƒ¨åˆ†å‡½æ•°ä»¥åŠå˜é‡
 extern int yylex();
 extern int yylval;
 extern char* yytext;
@@ -83,7 +83,7 @@ extern FILE* yyin;
 extern int cur_line_num;
 
 
-//º¯ÊıÉùÃ÷
+//å‡½æ•°å£°æ˜
 
 ast *create_ast(void);
 ast_node *create_ast_node(node_type_type node_type);
@@ -117,23 +117,23 @@ ast_node *id_list(ast_node *root);
 
 int tok;
 
-/*ÉùÃ÷´´½¨Óï·¨Ê÷ËùĞèµÄº¯Êı begin*/
+/*å£°æ˜åˆ›å»ºè¯­æ³•æ ‘æ‰€éœ€çš„å‡½æ•° begin*/
 
-//´´½¨ĞÂÓï·¨Ê÷£¬·µ»ØÆäÖ¸Õë
+//åˆ›å»ºæ–°è¯­æ³•æ ‘ï¼Œè¿”å›å…¶æŒ‡é’ˆ
 ast *create_ast(void) {
 	ast *new_ast = (ast*)malloc(sizeof(ast));
 	memset(new_ast, 0, sizeof(ast));
 	return new_ast;
 }
 
-//´´½¨½áµã£¬ÒÔ¼°º¬Í·½áµãµÄº¢×ÓÁ´±í£¬²¢·µ»ØÆäÖ¸Õë
+//åˆ›å»ºç»“ç‚¹ï¼Œä»¥åŠå«å¤´ç»“ç‚¹çš„å­©å­é“¾è¡¨ï¼Œå¹¶è¿”å›å…¶æŒ‡é’ˆ
 ast_node *create_ast_node(node_type_type node_type) {
 	ast_node *new_ast_node = (ast_node*)malloc(sizeof(ast_node));
 	memset(new_ast_node, 0, sizeof(ast_node));
 
-	new_ast_node->node_type = node_type;//Îª½áµã¸³Öµ£¬Îªµ±Ç°µÄÓï·¨·ûºÅ
+	new_ast_node->node_type = node_type;//ä¸ºç»“ç‚¹èµ‹å€¼ï¼Œä¸ºå½“å‰çš„è¯­æ³•ç¬¦å·
 
-	child_node_ptr *new_child_node_ptr = (child_node_ptr*)malloc(sizeof(child_node_ptr));//´´½¨º¢×ÓÁ´±íµÄÍ·½áµã
+	child_node_ptr *new_child_node_ptr = (child_node_ptr*)malloc(sizeof(child_node_ptr));//åˆ›å»ºå­©å­é“¾è¡¨çš„å¤´ç»“ç‚¹
 	memset(new_child_node_ptr, 0, sizeof(child_node_ptr));
 	new_ast_node->child_list = new_child_node_ptr;
 
@@ -142,15 +142,15 @@ ast_node *create_ast_node(node_type_type node_type) {
 	return new_ast_node;
 }
 
-//Ôö¼Óº¢×ÓÁ´±í½áµã,½áµãÖµÎªµÚ¶ş¸ö²ÎÊı,·µ»Ø¸Ã½áµãÖ¸Õë
+//å¢åŠ å­©å­é“¾è¡¨ç»“ç‚¹,ç»“ç‚¹å€¼ä¸ºç¬¬äºŒä¸ªå‚æ•°,è¿”å›è¯¥ç»“ç‚¹æŒ‡é’ˆ
 /*
 child_node_ptr *add_child_node_ptr(ast_node *father, node_type_type child_node_type) {
-	child_node_ptr *new_child_node_ptr = (child_node_ptr*)malloc(sizeof(child_node_ptr));//´´½¨º¢×ÓÁ´±í½áµã
+	child_node_ptr *new_child_node_ptr = (child_node_ptr*)malloc(sizeof(child_node_ptr));//åˆ›å»ºå­©å­é“¾è¡¨ç»“ç‚¹
 	memset(new_child_node_ptr, 0, sizeof(child_node_ptr));
 
 	new_child_node_ptr->child_node = create_ast_node(child_node_type);
 
-	//²åÈë½áµãµ½Î²²¿£¬ÓÉÓÚÊ¹ÓÃÁËÍ·½áµã£¬Î²²å·¨½ÏÈİÒ×ÊµÏÖ
+	//æ’å…¥ç»“ç‚¹åˆ°å°¾éƒ¨ï¼Œç”±äºä½¿ç”¨äº†å¤´ç»“ç‚¹ï¼Œå°¾æ’æ³•è¾ƒå®¹æ˜“å®ç°
 	child_node_ptr *p = father->child_list;
 	while (NULL != p->next) {
 		p = p->next;
@@ -160,14 +160,14 @@ child_node_ptr *add_child_node_ptr(ast_node *father, node_type_type child_node_t
 	return new_child_node_ptr;
 }
 */
-//ĞÂ°æ´´½¨½áµã
+//æ–°ç‰ˆåˆ›å»ºç»“ç‚¹
 ast_node *add_child_node_ptr(ast_node *father, node_type_type child_node_type) {
-	child_node_ptr *new_child_node_ptr = (child_node_ptr*)malloc(sizeof(child_node_ptr));//´´½¨º¢×ÓÁ´±í½áµã
+	child_node_ptr *new_child_node_ptr = (child_node_ptr*)malloc(sizeof(child_node_ptr));//åˆ›å»ºå­©å­é“¾è¡¨ç»“ç‚¹
 	memset(new_child_node_ptr, 0, sizeof(child_node_ptr));
 
 	new_child_node_ptr->child_node = create_ast_node(child_node_type);
 
-	//²åÈë½áµãµ½Î²²¿£¬ÓÉÓÚÊ¹ÓÃÁËÍ·½áµã£¬Î²²å·¨½ÏÈİÒ×ÊµÏÖ
+	//æ’å…¥ç»“ç‚¹åˆ°å°¾éƒ¨ï¼Œç”±äºä½¿ç”¨äº†å¤´ç»“ç‚¹ï¼Œå°¾æ’æ³•è¾ƒå®¹æ˜“å®ç°
 	child_node_ptr *p = father->child_list;
 	while (NULL != p->next) {
 		p = p->next;
@@ -178,7 +178,7 @@ ast_node *add_child_node_ptr(ast_node *father, node_type_type child_node_type) {
 }
 
 int show_ast(ast *root) {
-	int spa_num = 0;//Êä³öÊ±ºòµÄ¿Õ¸ñÊı
+	int spa_num = 0;//è¾“å‡ºæ—¶å€™çš„ç©ºæ ¼æ•°
 	ast_node *p = root->root;
 	show_node(p, 0);
 	return 1;
@@ -204,7 +204,7 @@ int show_node(ast_node *node, int space_num){
 	return 1;
 }
 
-/*ÉùÃ÷´´½¨Óï·¨Ê÷Ïà¹ØµÄº¯Êı end*/
+/*å£°æ˜åˆ›å»ºè¯­æ³•æ ‘ç›¸å…³çš„å‡½æ•° end*/
 
 
 void advance()
@@ -231,7 +231,7 @@ ast_node *program() {
 	ast_node *new_program = create_ast_node(PROGRAM);
 
 	while ((EOF != tok) && (0 != tok)) {
-		//ÏÖÔÚÓĞ¸öÎÊÌâ£¬ÊÇÔÚº¯ÊıÍâÃæ½¨Á¢ÏàÓ¦½áµã»¹ÊÇÔÚº¯ÊıÄÚ(ÄÚ£¡£¡
+		//ç°åœ¨æœ‰ä¸ªé—®é¢˜ï¼Œæ˜¯åœ¨å‡½æ•°å¤–é¢å»ºç«‹ç›¸åº”ç»“ç‚¹è¿˜æ˜¯åœ¨å‡½æ•°å†…(å†…ï¼ï¼
 		external_declaration(new_program);
 	}
 	return new_program;
